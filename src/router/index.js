@@ -50,6 +50,10 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  // routerLink 比對網址名稱給 class
+  // 一模一樣 router-link-exact-active
+  // 相似 router-link-active
+  linkExactActiveClass: 'active',
   routes
 })
 

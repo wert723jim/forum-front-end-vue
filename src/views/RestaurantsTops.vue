@@ -1,3 +1,18 @@
 <template>
-  <h1>resturantTops</h1>
+  <div class="container py-5">
+    <!-- 使用 NavTabs 元件 -->
+    <NavTabs />
+    <h1 class="mt-5">
+      restaurantstops
+    </h1>
+  </div>
 </template>
+
+<script>
+import NavTabs from '../components/NavTabs.vue'
+export default {
+  components: {
+    NavTabs
+  }
+}
+</script>
