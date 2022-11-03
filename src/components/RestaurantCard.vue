@@ -23,24 +23,32 @@
         <button
           type="button"
           class="btn btn-danger btn-border favorite mr-2"
+          v-if="restaurant.isFavorited"
+          @click.stop.prevent="toggleFavorite"
         >
           移除最愛
         </button>
         <button
           type="button"
           class="btn btn-primary btn-border favorite mr-2"
+          v-else
+          @click.stop.prevent="toggleFavorite"
         >
           加到最愛
         </button>
         <button
           type="button"
           class="btn btn-danger like mr-2"
+          v-if="restaurant.isLiked"
+          @click.stop.prevent="toggleLike"
         >
           Unlike
         </button>
         <button
           type="button"
           class="btn btn-primary like mr-2"
+          v-else
+          @click.stop.prevent="toggleLike"
         >
           Like
         </button>
@@ -59,7 +67,22 @@ export default {
   },
   data () {
     return {
+      // 為了能對傳進來的資料進行其他處理
       restaurant: this.initialRestaurant
+    }
+  },
+  methods: {
+    toggleFavorite() {
+      this.restaurant = {
+        ...this.restaurant,
+        isFavorited: !this.restaurant.isFavorited
+      }
+    },
+    toggleLike() {
+      this.restaurant = {
+        ...this.restaurant,
+        isLiked: !this.restaurant.isLiked
+      }
     }
   }
 }
