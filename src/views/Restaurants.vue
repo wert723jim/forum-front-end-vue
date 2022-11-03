@@ -3,6 +3,7 @@
     <!-- 使用 NavTabs 元件 -->
     <NavTabs />
     <!-- NavPills -->
+    <RestaurantsNavPills :categories="categories"/>
     <h1 class="mt-5">
       首頁-餐廳列表
     </h1>
@@ -15,12 +16,21 @@
       />
     </div>
     <!-- RestaurantPagination -->
+    <RestaurantsPagination
+      :category-id="categoryId"
+      :current-page="currentPage"
+      :total-page="totalPage"
+      :previous-page="previousPage"
+      :next-page="nextPage"
+    />
   </div>
 </template>
 
 <script>
 import NavTabs from '../components/NavTabs.vue'
 import RestaurantCard from '../components/RestaurantCard.vue'
+import RestaurantsNavPills from '../components/RestaurantsNavPills.vue'
+import RestaurantsPagination from '../components/RestaurantsPagination.vue'
 
 const dummyData = {
     "restaurants": [
@@ -296,7 +306,9 @@ const dummyData = {
 export default {
   components: {
     NavTabs,
-    RestaurantCard
+    RestaurantCard,
+    RestaurantsNavPills,
+    RestaurantsPagination
   },
   data () {
     return {
