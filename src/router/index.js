@@ -37,6 +37,12 @@ const routes = [
     name: 'restaurants-tops',
     component: () => import('../views/RestaurantsTops.vue')
   },
+  // 動態路由
+  {
+    path: '/restaurants/:id',
+    name: 'restaurant',
+    component: () => import('../views/Restaurant.vue')
+  },
   {
     path: '/users/tops',
     name: 'users-tops',
