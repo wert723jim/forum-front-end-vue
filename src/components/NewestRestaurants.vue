@@ -9,7 +9,11 @@
       :key="restaurant.id"
       >
         <h4>
-          <a href="#">{{restaurant.name}}</a>
+          <router-link
+            :to="{name: 'restaurant', params: {id: restaurant.id}}"
+          >
+            {{restaurant.name}}
+          </router-link>
           <!-- a non-breaking space -->
           &nbsp;
           <small>{{restaurant.Category ? restaurant.Category.name : '未分類'}}</small>
@@ -47,9 +51,11 @@
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
+import {fromNowFilter} from '../utils/mixins'
 
 export default {
+  mixins: [fromNowFilter],
   props: {
     restaurants: {
       type: Array,
@@ -57,14 +63,14 @@ export default {
       required: true
     }
   },
-  filters: {
-    fromNow(datetime) {
-      if(!datetime) {
-        return '-'
-      }
-      return moment(datetime).fromNow()
-    }
-  }
+  // filters: {
+  //   fromNow(datetime) {
+  //     if(!datetime) {
+  //       return '-'
+  //     }
+  //     return moment(datetime).fromNow()
+  //   }
+  // }
 }
 </script>
 

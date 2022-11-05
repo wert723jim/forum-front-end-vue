@@ -5,14 +5,25 @@
     <RestaurantDetail :initial-restaurant="restaurant"/>
     <hr>
     <!-- 餐廳評論 RestaurantComments -->
+    <RestaurantComments
+      :restaurant-comments="restaurantComments"
+      @after-delete-comment="afterDeleteComment"
+    />
     <!-- 新增評論 CreateComment -->
+    <!-- 將 restaurant.id 傳入 -->
+    <CreateComment 
+      :restaurant-id="restaurant.id"
+      @after-create-comment="afterCreateComment"
+    />
   </div>
 </template>
 
 <script>
 import RestaurantDetail from '../components/RestaurantDetail.vue'
+import RestaurantComments from '../components/RestaurantComments.vue'
+import CreateComment from '../components/CreateComment.vue'
 
-const dummyData = {
+const dummyData = { 
     "restaurant": {
         "id": 1,
         "name": "Alvis Morar12345453",
@@ -110,10 +121,23 @@ const dummyData = {
     "isFavorited": true,
     "isLiked": false
 }
+// 模擬使用者
+const dummyUser = {
+  currentUser: {
+    id: 1,
+    name: '管理者',
+    email: 'root@example.com',
+    image: 'https://i.pravatar.cc/300',
+    isAdmin: true
+  },
+  isAuthenticated: true
+}
 
 export default {
   components: {
-    RestaurantDetail
+    RestaurantDetail,
+    RestaurantComments,
+    CreateComment
   },
   name: 'Restaurant',
   data () {
@@ -130,7 +154,8 @@ export default {
         isFavorited: false,
         isLiked: false
       },
-      restaurantComments: []
+      restaurantComments: [],
+      currentUser: dummyUser.currentUser
     }
   },
   created() {
@@ -139,6 +164,24 @@ export default {
     this.fetchRestaurant(restaurantId)
   },
   methods: {
+    afterDeleteComment(commentId) {
+      // 更新前端畫面
+      this.restaurantComments = this.restaurantComments.filter((comment) => comment.id !== commentId)
+    },
+    afterCreateComment(payload) {
+      const {commentId, restaurantId, text} = payload
+      this.restaurantComments.push({
+        id: commentId,
+        RestaurantId: restaurantId,
+        User: {
+          id: this.currentUser.id,
+          name: this.currentUser.name
+        },
+        text,
+        //抓當下時間
+        createdAt: new Date()
+      })
+    },
     fetchRestaurant(restaurantId) {
       // 解構賦值
       // const {restaurant, isFavorited, isLiked} = dummyData

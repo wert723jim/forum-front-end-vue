@@ -9,9 +9,11 @@
         :key="comment.id"
       >
         <h4>
-          <a href="#">
+          <router-link
+           :to="{name:'restaurant', params: {id: comment.Restaurant.id}}"
+          >
             {{comment.Restaurant.name}}
-          </a>
+          </router-link>
         </h4>
         <p>{{comment.text}}</p>by
         <a href="#">
@@ -53,22 +55,26 @@
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
+// 載入撰寫好的 mixin
+import {fromNowFilter} from '../utils/mixins'
+
 export default {
+  mixins: [fromNowFilter],
   props: {
     comments: {
       type: Array,
       required: true
     }
   },
-  filters: {
-    fromNow(datetime) {
-      if(!datetime) {
-        return '-'
-      }
+  // filters: {
+  //   fromNow(datetime) {
+  //     if(!datetime) {
+  //       return '-'
+  //     }
 
-      return moment(datetime).fromNow()
-    }
-  }
+  //     return moment(datetime).fromNow()
+  //   }
+  // }
 }
 </script>
