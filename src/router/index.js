@@ -39,6 +39,11 @@ const routes = [
   },
   // 動態路由
   {
+    path: '/restaurants/:id/dashboard',
+    name: 'restaurant-dashboard',
+    component: () => import('../views/RestaurantDashBoard.vue')
+  },
+  {
     path: '/restaurants/:id',
     name: 'restaurant',
     component: () => import('../views/Restaurant.vue')
