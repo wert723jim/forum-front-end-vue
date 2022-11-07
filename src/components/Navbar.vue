@@ -39,7 +39,7 @@
           v-if="isAuthenticated"
         >
           <router-link
-            to="#" 
+            :to="{name: 'user', params: {id: currentUser.id}}" 
             class="text-white mr-3"
           > 
             {{currentUser.name || '使用者'}} 您好
