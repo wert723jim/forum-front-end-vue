@@ -6,9 +6,13 @@
     >
       Restaurants
     </router-link> &nbsp;|
-    <a href="#">Categories</a> &nbsp;|
     <router-link
-      :to="{name: 'admin-user' ,params: {id: 1}}"
+      to="/admin/categories"
+    >
+      Categories
+    </router-link> &nbsp;|
+    <router-link
+      to="/admin/users"
     >
       Users
     </router-link>
