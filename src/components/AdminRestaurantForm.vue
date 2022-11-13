@@ -1,5 +1,6 @@
 <template>
   <form
+    v-show="!isLoading"
     @submit.stop.prevent="handleSubmit"
   >
     <div class="form-group">
@@ -117,42 +118,16 @@
     <button
       type="submit"
       class="btn btn-primary"
+      :disabled="isProcessing"
     >
-      送出
+      {{isProcessing ? "處理中..." : "送出"}}
     </button>
   </form>
 </template>
 
 <script>
-
-const dummyData = {
-  categories: [
-    {
-      id: 1,
-      name: '中式料理',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 2,
-      name: '日本料理',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 3,
-      name: '義大利料理',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 4,
-      name: '墨西哥料理',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    }
-  ]
-}
+import adminAPI from '../apis/admin'
+import {Toast} from '../utils/helpers'
 
 export default {
   props: {
@@ -170,6 +145,10 @@ export default {
         image: '',
         openingHours: '',
       })
+    },
+    isProcessing: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -183,19 +162,43 @@ export default {
         image: '',
         openingHours: ''
       },
-      categories: []
+      categories: [],
+      // 讀取旗標，將Category資料讀取完畢後設為 false
+      isLoading: true
     }
   },
   created() {
     this.fetchCategories()
-    this.restaurant = {
-      ...this.restaurant,
-      ...this.initialRestaurant
+    // this.restaurant = {
+    //   ...this.restaurant,
+    //   ...this.initialRestaurant
+    // }
+  },
+  // 避免因時間差，而在表單渲染後才取得資料
+  // 當有資料進來後，將資料重新填入
+  watch: {
+    initialRestaurant(newValue) {
+      this.restaurant = {
+        ...this.restaurant,
+        ...newValue
+      }
     }
   },
   methods: {
-    fetchCategories() {
-      this.categories = dummyData.categories
+    async fetchCategories() {
+      try {
+        const {data} = await adminAPI.categories.get()
+
+        this.categories = data.categories
+        // 讀取完後，將旗標設置為false
+        this.isLoading = false
+      } catch(error) {
+        this.isLoading = false
+        Toast.fire({
+          icon: 'warning',
+          title: '無法取得Category資料，請稍後再試'
+        })
+      }
     },
     handleFileChange(e) {
       const files = e.target.files
@@ -207,6 +210,21 @@ export default {
       }
     },
     handleSubmit(e) {
+      // 檢查欄位是否有空白漏填
+      if (!this.restaurant.name) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請填寫餐廳名稱'
+        })
+        return
+      } else if (!this.restaurant.categoryId) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請選擇餐廳類別'
+        })
+        return
+      }
+
       const form = e.target
       const formData = new FormData(form)
       // for(let [name, value] of formData.entries()) {

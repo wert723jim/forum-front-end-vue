@@ -552,7 +552,6 @@ export default {
     async fetchFeeds() {
         try{
           const response = await restaurantsAPI.getFeeds()
-          console.log(response)
           const {data} = response
 
           this.restaurants = data.restaurants

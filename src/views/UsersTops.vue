@@ -204,7 +204,7 @@ export default {
     async unFollow(userId) {  
       try {
         const {data} = await usersAPI.unfollow(userId)
-
+        
         if(data.status !== 'success') {
           throw new Error(data.message)
         }

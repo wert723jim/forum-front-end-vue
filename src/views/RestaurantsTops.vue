@@ -64,222 +64,225 @@
 
 <script>
 import NavTabs from '../components/NavTabs.vue'
+import restaurantsAPI from '../apis/restaurants'
+import usersAPI from '../apis/users'
+import {Toast} from '../utils/helpers'
 
-const dummyData = {
-    "restaurants": [
-        {
-            "id": 49,
-            "name": "Morris Keeling IV",
-            "tel": "1-801-886-7642 x0828",
-            "address": "92999 Bailey Garden",
-            "opening_hours": "08:00",
-            "description": "Cum vel corrupti et sit in.\nVoluptas deserunt sapi",
-            "image": "https://loremflickr.com/320/240/restaurant,food/?random=83.06286469813546",
-            "viewCounts": 0,
-            "createdAt": "2022-09-14T15:10:59.000Z",
-            "updatedAt": "2022-09-14T15:10:59.000Z",
-            "CategoryId": 3,
-            "FavoritedUsers": [
-                {
-                    "id": 1,
-                    "name": "root",
-                    "email": "root@example.com",
-                    "password": "$2a$10$JzCoR9e6YxXVLJBcFq4h8O647zkUGnFedq2NNCaxt8zpbazKXexsq",
-                    "isAdmin": true,
-                    "image": null,
-                    "createdAt": "2022-09-14T15:10:59.000Z",
-                    "updatedAt": "2022-09-14T15:10:59.000Z",
-                    "Favorite": {
-                        "UserId": 1,
-                        "RestaurantId": 49,
-                        "createdAt": "2022-09-30T03:56:34.000Z",
-                        "updatedAt": "2022-09-30T03:56:34.000Z"
-                    }
-                }
-            ],
-            "isFavorited": true,
-            "FavoriteCount": 1
-        },
-        {
-            "id": 48,
-            "name": "Justus Rogahn",
-            "tel": "1-716-480-4341 x05162",
-            "address": "3499 Rebecca Fords",
-            "opening_hours": "08:00",
-            "description": "non hic repudiandae",
-            "image": "https://loremflickr.com/320/240/restaurant,food/?random=20.039416423145482",
-            "viewCounts": 0,
-            "createdAt": "2022-09-14T15:10:59.000Z",
-            "updatedAt": "2022-09-14T15:10:59.000Z",
-            "CategoryId": 5,
-            "FavoritedUsers": [
-                {
-                    "id": 1,
-                    "name": "root",
-                    "email": "root@example.com",
-                    "password": "$2a$10$JzCoR9e6YxXVLJBcFq4h8O647zkUGnFedq2NNCaxt8zpbazKXexsq",
-                    "isAdmin": true,
-                    "image": null,
-                    "createdAt": "2022-09-14T15:10:59.000Z",
-                    "updatedAt": "2022-09-14T15:10:59.000Z",
-                    "Favorite": {
-                        "UserId": 1,
-                        "RestaurantId": 48,
-                        "createdAt": "2022-09-30T03:56:43.000Z",
-                        "updatedAt": "2022-09-30T03:56:43.000Z"
-                    }
-                }
-            ],
-            "isFavorited": true,
-            "FavoriteCount": 1
-        },
-        {
-            "id": 1,
-            "name": "Alvis Morar12345453",
-            "tel": "187.039.2451",
-            "address": "935 Bartoletti Island",
-            "opening_hours": "08:00",
-            "description": "enim",
-            "image": "https://loremflickr.com/320/240/restaurant,food/?random=13.649141450940473",
-            "viewCounts": 23,
-            "createdAt": "2022-09-14T15:10:59.000Z",
-            "updatedAt": "2022-11-03T14:24:10.000Z",
-            "CategoryId": 4,
-            "FavoritedUsers": [
-                {
-                    "id": 1,
-                    "name": "root",
-                    "email": "root@example.com",
-                    "password": "$2a$10$JzCoR9e6YxXVLJBcFq4h8O647zkUGnFedq2NNCaxt8zpbazKXexsq",
-                    "isAdmin": true,
-                    "image": null,
-                    "createdAt": "2022-09-14T15:10:59.000Z",
-                    "updatedAt": "2022-09-14T15:10:59.000Z",
-                    "Favorite": {
-                        "UserId": 1,
-                        "RestaurantId": 1,
-                        "createdAt": "2022-09-27T07:47:34.000Z",
-                        "updatedAt": "2022-09-27T07:47:34.000Z"
-                    }
-                }
-            ],
-            "isFavorited": true,
-            "FavoriteCount": 1
-        },
-        {
-            "id": 60,
-            "name": "123",
-            "tel": "123",
-            "address": "123",
-            "opening_hours": "20:59",
-            "description": "123",
-            "image": "https://i.imgur.com/b2mFJ8d.jpeg",
-            "viewCounts": 0,
-            "createdAt": "2022-09-30T13:00:00.000Z",
-            "updatedAt": "2022-09-30T13:00:00.000Z",
-            "CategoryId": 2,
-            "FavoritedUsers": [],
-            "isFavorited": false,
-            "FavoriteCount": 0
-        },
-        {
-            "id": 59,
-            "name": "123",
-            "tel": "123",
-            "address": "123",
-            "opening_hours": "20:59",
-            "description": "123",
-            "image": "https://i.imgur.com/ZPkIMlg.png",
-            "viewCounts": 0,
-            "createdAt": "2022-09-30T12:58:18.000Z",
-            "updatedAt": "2022-09-30T12:58:18.000Z",
-            "CategoryId": 2,
-            "FavoritedUsers": [],
-            "isFavorited": false,
-            "FavoriteCount": 0
-        },
-        {
-            "id": 58,
-            "name": "name",
-            "tel": "123",
-            "address": "123",
-            "opening_hours": "20:46",
-            "description": "1234",
-            "image": "https://i.imgur.com/m4BltCO.jpeg",
-            "viewCounts": 0,
-            "createdAt": "2022-09-30T12:44:30.000Z",
-            "updatedAt": "2022-09-30T12:44:30.000Z",
-            "CategoryId": 3,
-            "FavoritedUsers": [],
-            "isFavorited": false,
-            "FavoriteCount": 0
-        },
-        {
-            "id": 57,
-            "name": "123",
-            "tel": "123",
-            "address": "123",
-            "opening_hours": "20:43",
-            "description": "1234",
-            "image": "https://i.imgur.com/i503sbO.png",
-            "viewCounts": 0,
-            "createdAt": "2022-09-30T12:43:43.000Z",
-            "updatedAt": "2022-09-30T12:43:43.000Z",
-            "CategoryId": 2,
-            "FavoritedUsers": [],
-            "isFavorited": false,
-            "FavoriteCount": 0
-        },
-        {
-            "id": 56,
-            "name": "123",
-            "tel": "1234",
-            "address": "1234",
-            "opening_hours": "20:42",
-            "description": "12345",
-            "image": "https://i.imgur.com/GdrWnuk.jpeg",
-            "viewCounts": 0,
-            "createdAt": "2022-09-30T12:42:27.000Z",
-            "updatedAt": "2022-09-30T12:42:27.000Z",
-            "CategoryId": 2,
-            "FavoritedUsers": [],
-            "isFavorited": false,
-            "FavoriteCount": 0
-        },
-        {
-            "id": 55,
-            "name": "123",
-            "tel": "123",
-            "address": "456",
-            "opening_hours": "20:39",
-            "description": "123",
-            "image": "https://i.imgur.com/JF4oRjf.jpeg",
-            "viewCounts": 0,
-            "createdAt": "2022-09-30T12:40:48.000Z",
-            "updatedAt": "2022-09-30T12:40:48.000Z",
-            "CategoryId": 3,
-            "FavoritedUsers": [],
-            "isFavorited": false,
-            "FavoriteCount": 0
-        },
-        {
-            "id": 54,
-            "name": "123",
-            "tel": "123",
-            "address": "456",
-            "opening_hours": "20:39",
-            "description": "123",
-            "image": "https://i.imgur.com/BAzZ9oQ.jpeg",
-            "viewCounts": 0,
-            "createdAt": "2022-09-30T12:39:33.000Z",
-            "updatedAt": "2022-09-30T12:39:33.000Z",
-            "CategoryId": 3,
-            "FavoritedUsers": [],
-            "isFavorited": false,
-            "FavoriteCount": 0
-        }
-    ]
-}
+// const dummyData = {
+//     "restaurants": [
+//         {
+//             "id": 49,
+//             "name": "Morris Keeling IV",
+//             "tel": "1-801-886-7642 x0828",
+//             "address": "92999 Bailey Garden",
+//             "opening_hours": "08:00",
+//             "description": "Cum vel corrupti et sit in.\nVoluptas deserunt sapi",
+//             "image": "https://loremflickr.com/320/240/restaurant,food/?random=83.06286469813546",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-14T15:10:59.000Z",
+//             "updatedAt": "2022-09-14T15:10:59.000Z",
+//             "CategoryId": 3,
+//             "FavoritedUsers": [
+//                 {
+//                     "id": 1,
+//                     "name": "root",
+//                     "email": "root@example.com",
+//                     "password": "$2a$10$JzCoR9e6YxXVLJBcFq4h8O647zkUGnFedq2NNCaxt8zpbazKXexsq",
+//                     "isAdmin": true,
+//                     "image": null,
+//                     "createdAt": "2022-09-14T15:10:59.000Z",
+//                     "updatedAt": "2022-09-14T15:10:59.000Z",
+//                     "Favorite": {
+//                         "UserId": 1,
+//                         "RestaurantId": 49,
+//                         "createdAt": "2022-09-30T03:56:34.000Z",
+//                         "updatedAt": "2022-09-30T03:56:34.000Z"
+//                     }
+//                 }
+//             ],
+//             "isFavorited": true,
+//             "FavoriteCount": 1
+//         },
+//         {
+//             "id": 48,
+//             "name": "Justus Rogahn",
+//             "tel": "1-716-480-4341 x05162",
+//             "address": "3499 Rebecca Fords",
+//             "opening_hours": "08:00",
+//             "description": "non hic repudiandae",
+//             "image": "https://loremflickr.com/320/240/restaurant,food/?random=20.039416423145482",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-14T15:10:59.000Z",
+//             "updatedAt": "2022-09-14T15:10:59.000Z",
+//             "CategoryId": 5,
+//             "FavoritedUsers": [
+//                 {
+//                     "id": 1,
+//                     "name": "root",
+//                     "email": "root@example.com",
+//                     "password": "$2a$10$JzCoR9e6YxXVLJBcFq4h8O647zkUGnFedq2NNCaxt8zpbazKXexsq",
+//                     "isAdmin": true,
+//                     "image": null,
+//                     "createdAt": "2022-09-14T15:10:59.000Z",
+//                     "updatedAt": "2022-09-14T15:10:59.000Z",
+//                     "Favorite": {
+//                         "UserId": 1,
+//                         "RestaurantId": 48,
+//                         "createdAt": "2022-09-30T03:56:43.000Z",
+//                         "updatedAt": "2022-09-30T03:56:43.000Z"
+//                     }
+//                 }
+//             ],
+//             "isFavorited": true,
+//             "FavoriteCount": 1
+//         },
+//         {
+//             "id": 1,
+//             "name": "Alvis Morar12345453",
+//             "tel": "187.039.2451",
+//             "address": "935 Bartoletti Island",
+//             "opening_hours": "08:00",
+//             "description": "enim",
+//             "image": "https://loremflickr.com/320/240/restaurant,food/?random=13.649141450940473",
+//             "viewCounts": 23,
+//             "createdAt": "2022-09-14T15:10:59.000Z",
+//             "updatedAt": "2022-11-03T14:24:10.000Z",
+//             "CategoryId": 4,
+//             "FavoritedUsers": [
+//                 {
+//                     "id": 1,
+//                     "name": "root",
+//                     "email": "root@example.com",
+//                     "password": "$2a$10$JzCoR9e6YxXVLJBcFq4h8O647zkUGnFedq2NNCaxt8zpbazKXexsq",
+//                     "isAdmin": true,
+//                     "image": null,
+//                     "createdAt": "2022-09-14T15:10:59.000Z",
+//                     "updatedAt": "2022-09-14T15:10:59.000Z",
+//                     "Favorite": {
+//                         "UserId": 1,
+//                         "RestaurantId": 1,
+//                         "createdAt": "2022-09-27T07:47:34.000Z",
+//                         "updatedAt": "2022-09-27T07:47:34.000Z"
+//                     }
+//                 }
+//             ],
+//             "isFavorited": true,
+//             "FavoriteCount": 1
+//         },
+//         {
+//             "id": 60,
+//             "name": "123",
+//             "tel": "123",
+//             "address": "123",
+//             "opening_hours": "20:59",
+//             "description": "123",
+//             "image": "https://i.imgur.com/b2mFJ8d.jpeg",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-30T13:00:00.000Z",
+//             "updatedAt": "2022-09-30T13:00:00.000Z",
+//             "CategoryId": 2,
+//             "FavoritedUsers": [],
+//             "isFavorited": false,
+//             "FavoriteCount": 0
+//         },
+//         {
+//             "id": 59,
+//             "name": "123",
+//             "tel": "123",
+//             "address": "123",
+//             "opening_hours": "20:59",
+//             "description": "123",
+//             "image": "https://i.imgur.com/ZPkIMlg.png",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-30T12:58:18.000Z",
+//             "updatedAt": "2022-09-30T12:58:18.000Z",
+//             "CategoryId": 2,
+//             "FavoritedUsers": [],
+//             "isFavorited": false,
+//             "FavoriteCount": 0
+//         },
+//         {
+//             "id": 58,
+//             "name": "name",
+//             "tel": "123",
+//             "address": "123",
+//             "opening_hours": "20:46",
+//             "description": "1234",
+//             "image": "https://i.imgur.com/m4BltCO.jpeg",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-30T12:44:30.000Z",
+//             "updatedAt": "2022-09-30T12:44:30.000Z",
+//             "CategoryId": 3,
+//             "FavoritedUsers": [],
+//             "isFavorited": false,
+//             "FavoriteCount": 0
+//         },
+//         {
+//             "id": 57,
+//             "name": "123",
+//             "tel": "123",
+//             "address": "123",
+//             "opening_hours": "20:43",
+//             "description": "1234",
+//             "image": "https://i.imgur.com/i503sbO.png",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-30T12:43:43.000Z",
+//             "updatedAt": "2022-09-30T12:43:43.000Z",
+//             "CategoryId": 2,
+//             "FavoritedUsers": [],
+//             "isFavorited": false,
+//             "FavoriteCount": 0
+//         },
+//         {
+//             "id": 56,
+//             "name": "123",
+//             "tel": "1234",
+//             "address": "1234",
+//             "opening_hours": "20:42",
+//             "description": "12345",
+//             "image": "https://i.imgur.com/GdrWnuk.jpeg",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-30T12:42:27.000Z",
+//             "updatedAt": "2022-09-30T12:42:27.000Z",
+//             "CategoryId": 2,
+//             "FavoritedUsers": [],
+//             "isFavorited": false,
+//             "FavoriteCount": 0
+//         },
+//         {
+//             "id": 55,
+//             "name": "123",
+//             "tel": "123",
+//             "address": "456",
+//             "opening_hours": "20:39",
+//             "description": "123",
+//             "image": "https://i.imgur.com/JF4oRjf.jpeg",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-30T12:40:48.000Z",
+//             "updatedAt": "2022-09-30T12:40:48.000Z",
+//             "CategoryId": 3,
+//             "FavoritedUsers": [],
+//             "isFavorited": false,
+//             "FavoriteCount": 0
+//         },
+//         {
+//             "id": 54,
+//             "name": "123",
+//             "tel": "123",
+//             "address": "456",
+//             "opening_hours": "20:39",
+//             "description": "123",
+//             "image": "https://i.imgur.com/BAzZ9oQ.jpeg",
+//             "viewCounts": 0,
+//             "createdAt": "2022-09-30T12:39:33.000Z",
+//             "updatedAt": "2022-09-30T12:39:33.000Z",
+//             "CategoryId": 3,
+//             "FavoritedUsers": [],
+//             "isFavorited": false,
+//             "FavoriteCount": 0
+//         }
+//     ]
+// }
 
 export default {
   components: {
@@ -294,30 +297,69 @@ export default {
     this.fetchRestaurants()
   },
   methods: {
-    fetchRestaurants() {
-      this.restaurants = dummyData.restaurants
+    async fetchRestaurants() {
+      try {
+        const {data} = await restaurantsAPI.getTop()
+
+        this.restaurants = data.restaurants
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法取的人氣餐廳，請稍後再試'
+        })
+      }
     },
-    addFavorite(restaurantId) {
-      this.restaurants = this.restaurants.map((restaurant) => {
-        if(restaurant.id === restaurantId) {
-          return {
-            ...restaurant,
-            isFavorited: true,
-          }
+    async addFavorite(restaurantId) {
+      try {
+        const {data} = await usersAPI.addFavorite({restaurantId})
+
+        if(data.status !== 'success') {
+          throw new Error(data.message)
         }
-        return restaurant
-      })
+        this.restaurants = this.restaurants.map((restaurant) => {
+          if(restaurant.id === restaurantId) {
+            return {
+              ...restaurant,
+              isFavorited: true,
+              FavoriteCount: restaurant.FavoriteCount + 1
+            }
+          }
+          return restaurant
+        })
+
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法加入最愛，請稍後再試'
+        })
+      }
+      
     },
-    deleteFavorite(restaurantId) {
-      this.restaurants = this.restaurants.map((restaurant) => {
-        if(restaurant.id === restaurantId) {
-          return {
-            ...restaurant,
-            isFavorited: false,
-          }
+    async deleteFavorite(restaurantId) {
+      try {
+        const {data} = await usersAPI.deleteFavorite({restaurantId})
+
+        if(data.status !== 'success') {
+          throw new Error(data.message)
         }
-        return restaurant
-      })
+
+        this.restaurants = this.restaurants.map((restaurant) => {
+          if(restaurant.id === restaurantId) {
+            return {
+              ...restaurant,
+              isFavorited: false,
+              FavoriteCount: restaurant.FavoriteCount - 1
+            }
+          }
+          return restaurant
+        })
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法移除最愛，請稍後再試'
+        })
+      }
+      
     }
   }
 }
