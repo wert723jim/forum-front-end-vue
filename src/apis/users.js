@@ -50,5 +50,18 @@ export default {
         Authorization: `Bearer ${getToken()}`
       }
     })
+  },
+  create({name, email, password, passwordCheck}) {
+    return apiHelper.post('/signup', {
+      name,
+      email,
+      password,
+      passwordCheck
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      }
+    })
   }
 }

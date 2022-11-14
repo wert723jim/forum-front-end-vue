@@ -17,7 +17,7 @@
           class="form-control"
           placeholder="name"
           autocomplete="username"
-          required
+          
           autofocus
         >
       </div>
@@ -32,7 +32,7 @@
           class="form-control"
           placeholder="email"
           autocomplete="email"
-          required
+          
         >
       </div>
 
@@ -46,7 +46,7 @@
           class="form-control"
           placeholder="Password"
           autocomplete="new-password"
-          required
+          
         >
       </div>
 
@@ -60,7 +60,7 @@
           class="form-control"
           placeholder="Password"
           autocomplete="new-password"
-          required
+          
         >
       </div>
 
@@ -87,6 +87,9 @@
 </template>
 
 <script>
+import userAPI from '../apis/users'
+import {Toast} from '../utils/helpers'
+
 export default {
   data () {
     return {
@@ -97,8 +100,48 @@ export default {
     }
   },
   methods: {
-    handleSubmit () {
-      console.log('submit')
+    async handleSubmit() {
+      try {
+        // 檢查有無未填欄位
+      if(!(this.name&&this.email&&this.password&&this.passwordCheck)) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請勿有空白欄位'
+        })
+        return
+      }
+      // 檢查密碼是否正確
+      if(this.password !== this.passwordCheck) {
+        Toast.fire({
+          icon: 'warning',
+          title: '密碼確認錯誤'
+        })
+        return
+      }
+      
+      const {data} = await userAPI.create({
+        name: this.name,
+        email: this.email,
+        password: this.password,
+        passwordCheck: this.passwordCheck
+      })
+      
+      console.log(data)
+
+      if(data.status !== 'success') {
+        throw new Error(data.message)
+      }
+
+      
+
+      this.$router.push({name: 'restaurants'})
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法建立會員資料，請稍後再試'
+        })
+      }
+      
     }
   }
 }

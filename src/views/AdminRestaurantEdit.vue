@@ -36,6 +36,11 @@ export default {
     const {id} = this.$route.params
     this.fetchRestaurant(id)
   },
+  beforeRouteUpdate(to, from, next) {
+    const {id} = to.params
+    this.fetchRestaurant(id)
+    next()
+  },
   methods: {
     async handleAfterSubmit(formData) {
       // 透過 API 將表單資料送到伺服器
