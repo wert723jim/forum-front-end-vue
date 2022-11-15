@@ -82,6 +82,13 @@ export default {
       required: true
     }
   },
+  watch: {
+    initialRestaurant(newValue) {
+      this.restaurant = {
+        ...newValue
+      }
+    }
+  },
   data () {
     return {
       restaurant: this.initialRestaurant
