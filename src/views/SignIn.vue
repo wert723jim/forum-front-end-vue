@@ -96,6 +96,8 @@ export default {
           password:this.password
         })
 
+        
+
         const {data} = response
         // 檢查 response starus
         if(data.status !== 'success') {
@@ -103,6 +105,10 @@ export default {
         }
 
         localStorage.setItem('token', data.token)
+
+        // console.log(response)
+
+        this.$store.commit('setCurrentUser', data.user)
         // 轉址至restaurants頁面
         this.$router.push('/restaurants')
 
