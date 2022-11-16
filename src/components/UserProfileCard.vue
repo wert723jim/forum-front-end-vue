@@ -3,7 +3,7 @@
     <div class="row no-gutters">
       <div class="col-md-4">
           <img
-            :src="userProfile.image"
+            :src="userProfile.image | emptyImage"
             width="300px"
             height="300px"
           >
@@ -35,8 +35,8 @@
               <button
                type="submit" 
                class="btn btn-danger"
-               v-if="followed"
-               @click.stop.prevent="toggleFollowed"
+               v-if="userIsfollowed"
+               @click.stop.prevent="unFollowed(userProfile.id)"
               >
                 取消追蹤
               </button>
@@ -44,7 +44,7 @@
                type="submit" 
                class="btn btn-primary"
                v-else
-               @click.stop.prevent="toggleFollowed"
+               @click.stop.prevent="followed(userProfile.id)"
               >
                 追蹤
               </button>
@@ -57,6 +57,10 @@
 </template>
 
 <script>
+import {emptyImageFilter} from '../utils/mixins'
+import usersAPI from '../apis/users'
+import {Toast} from '../utils/helpers'
+
 export default {
   props: {
     userProfile: {
@@ -88,14 +92,55 @@ export default {
       required: true
     }
   },
+  mixins: [emptyImageFilter],
+  // 追蹤後改變資料，當資料改變時，將新的值傳入
+  watch: {
+    isFollowed(newValue) {
+      this.userIsfollowed = {
+        ...this.userIsfollowed,
+        ...newValue
+      }
+    }
+  },
   data() {
     return {
-      followed: this.isFollowed
+      userIsfollowed: this.isFollowed
     }
   },
   methods: {
-    toggleFollowed() {
-      this.followed = !this.followed
+    async followed(userId) {
+      try {
+        const {data} = await usersAPI.follow(userId)
+
+        console.log(data)
+
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.userIsfollowed = true
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法追蹤，請稍後再試'
+        })
+      }
+    },
+    async unFollowed(userId) {
+      try {
+        const {data} = await usersAPI.unfollow(userId)
+        console.log(data)
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.userIsfollowed = false
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法追蹤，請稍後再試'
+        })
+      }
     }
   }
 }

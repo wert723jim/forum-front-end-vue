@@ -33,6 +33,7 @@ export default {
     CreateComment
   },
   name: 'Restaurant',
+  
   data () {
     return {
       // 預設值
@@ -66,45 +67,53 @@ export default {
     this.fetchRestaurant(restaurantId)
   },
   methods: {
-    afterDeleteComment(commentId) {
-      // 更新前端畫面
-      this.restaurantComments = this.restaurantComments.filter((comment) => comment.id !== commentId)
+    async afterDeleteComment(commentId) {
+      try {
+        const {data} = await restaurantsAPI.deleteComments(commentId)
+
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        // 更新前端畫面
+        this.restaurantComments = this.restaurantComments.filter((comment) => comment.id !== commentId)
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法刪除留言，請稍後再試'
+        })
+      }
+      
     },
-    afterCreateComment(payload) {
-      const {commentId, restaurantId, text} = payload
-      this.restaurantComments.push({
-        id: commentId,
-        RestaurantId: restaurantId,
-        User: {
-          id: this.currentUser.id,
-          name: this.currentUser.name
-        },
-        text,
-        //抓當下時間
-        createdAt: new Date()
-      })
+    async afterCreateComment(payload) {
+      try {
+        payload = {
+          ...payload,
+          User: {
+            id: this.currentUser.id,
+            name: this.currentUser.name
+          },
+          createdAt: new Date()
+        }
+        const {data} = await restaurantsAPI.createComments({payload})
+
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        // this.restaurantComments.push(payload)
+        this.fetchRestaurant(this.restaurant.id)
+
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法建立留言，請稍後再試'
+        })
+      }
     },
     async fetchRestaurant(restaurantId) {
       try {
         const {data} = await restaurantsAPI.getRestaurant(restaurantId)
-        
-        console.log(data)
-
-        // this.restaurant = {
-        //   id: data.restaurant.id,
-        //   name: data.restaurant.name,
-        //   categoryName: data.restaurant.Category.name,
-        //   image: dummyData.restaurant.image,
-        //   openingHours: dummyData.restaurant.opening_hours,
-        //   tel: dummyData.restaurant.tel,
-        //   address: dummyData.restaurant.address,
-        //   description: dummyData.restaurant.description,
-        //   isFavorited: dummyData.isFavorited,
-        //   isLiked: dummyData.isLiked,
-        // }
-
-        // this.restaurantComments = dummyData.restaurant.Comments
-
         // 解構賦值
         const {restaurant, isFavorited, isLiked} = data
         const {
@@ -131,8 +140,6 @@ export default {
           isLiked
         }
         this.restaurantComments = Comments
-
-        console.log(restaurantId)
       } catch(error) {
         Toast.fire({
           icon: 'warning',

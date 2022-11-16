@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid"
-
 export default {
   props: {
     restaurantId: {
@@ -47,7 +45,6 @@ export default {
       // TODO: 向 API 發送 POST 請求
       // 伺服器新增 comment 成功後......
       this.$emit('after-create-comment',{
-        commentId: uuidv4(),
         restaurantId: this.restaurantId,
         text: this.text
       })

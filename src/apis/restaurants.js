@@ -24,5 +24,19 @@ export default {
     return apiHelper.get('/restaurants/top', {
       headers: { Authorization: `Bearer ${getToken()}`}
     })
+  },
+  createComments({payload}) {
+    return apiHelper.post('/comments', payload, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      }
+    })
+  },
+  deleteComments(commentId) {
+    return apiHelper.delete(`/comments/${commentId}`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      }
+    })
   }
 }

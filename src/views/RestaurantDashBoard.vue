@@ -25,96 +25,44 @@
 </template>
 
 <script>
-const dummyData = {
-    "restaurant": {
-        "id": 1,
-        "name": "Alvis Morar12345453",
-        "tel": "187.039.2451",
-        "address": "935 Bartoletti Island",
-        "opening_hours": "08:00",
-        "description": "enim",
-        "image": "https://loremflickr.com/320/240/restaurant,food/?random=13.649141450940473",
-        "viewCounts": 23,
-        "createdAt": "2022-09-14T15:10:59.000Z",
-        "updatedAt": "2022-11-03T14:24:10.000Z",
-        "CategoryId": 4,
-        "Category": {
-            "id": 4,
-            "name": "墨西哥料理",
-            "createdAt": "2022-09-14T15:10:59.000Z",
-            "updatedAt": "2022-09-14T15:10:59.000Z"
-        },
-        "Comments": [
-            {
-                "id": 1,
-                "text": "Ea quia eos culpa sit ab velit impedit libero.",
-                "UserId": 1,
-                "RestaurantId": 1,
-                "createdAt": "2022-09-14T15:10:59.000Z",
-                "updatedAt": "2022-09-14T15:10:59.000Z",
-                "User": {
-                    "id": 1,
-                    "name": "root",
-                    "email": "root@example.com",
-                    "password": "$2a$10$JzCoR9e6YxXVLJBcFq4h8O647zkUGnFedq2NNCaxt8zpbazKXexsq",
-                    "isAdmin": true,
-                    "image": null,
-                    "createdAt": "2022-09-14T15:10:59.000Z",
-                    "updatedAt": "2022-09-14T15:10:59.000Z"
-                }
-            },
-            {
-                "id": 51,
-                "text": "Eum tempora alias minus vel nostrum dicta quasi.",
-                "UserId": 1,
-                "RestaurantId": 1,
-                "createdAt": "2022-09-14T15:10:59.000Z",
-                "updatedAt": "2022-09-14T15:10:59.000Z",
-                "User": {
-                    "id": 1,
-                    "name": "root",
-                    "email": "root@example.com",
-                    "password": "$2a$10$JzCoR9e6YxXVLJBcFq4h8O647zkUGnFedq2NNCaxt8zpbazKXexsq",
-                    "isAdmin": true,
-                    "image": null,
-                    "createdAt": "2022-09-14T15:10:59.000Z",
-                    "updatedAt": "2022-09-14T15:10:59.000Z"
-                }
-            },
-            {
-                "id": 101,
-                "text": "Est et repellat ea quibusdam rerum ut dolorum.",
-                "UserId": 2,
-                "RestaurantId": 1,
-                "createdAt": "2022-09-14T15:10:59.000Z",
-                "updatedAt": "2022-09-14T15:10:59.000Z",
-                "User": {
-                    "id": 2,
-                    "name": "user1",
-                    "email": "user1@example.com",
-                    "password": "$2a$10$Yhw4LBOiXLc0RB1FsMpPn.q25kow7iGOIS8bm6Z9ezC13m1lmFmNe",
-                    "isAdmin": false,
-                    "image": null,
-                    "createdAt": "2022-09-14T15:10:59.000Z",
-                    "updatedAt": "2022-09-14T15:10:59.000Z"
-                }
-            }
-        ]
-    }
-}
+import restaurantsAPI from '../apis/restaurants'
+import {Toast} from '../utils/helpers'
 
 export default {
   data() {
     return {
-      restaurant: {}
+      restaurant: {
+        name: '',
+        Category: {
+          name: ''
+        },
+        Comments: [],
+        viewCounts: -1
+      }
     }
   },
+  beforeRouteUpdate(to, from, next) {
+    const {id} = to.params
+    this.fetchRestaurant(id)
+    next()
+  },
   created() {
-    this.fetchRestaurant()
+    const {id} = this.$route.params
+    console.log(id)
+    this.fetchRestaurant(id)
   },
   methods: {
-    fetchRestaurant() {
-      this.restaurant = dummyData.restaurant
+    async fetchRestaurant(restaurantId) {
+      try {
+        const {data} = await restaurantsAPI.getRestaurant(restaurantId)
+
+        this.restaurant = data.restaurant
+      } catch(error) {
+        Toast.fire({
+          icon: 'warning',
+          title: '無法取得餐廳資料，請稍後再試'
+        })
+      }
     }
   }
 }
