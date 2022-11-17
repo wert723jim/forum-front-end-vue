@@ -105,9 +105,7 @@ export default {
         }
 
         localStorage.setItem('token', data.token)
-
-        // console.log(response)
-
+        // commit vuex mutation
         this.$store.commit('setCurrentUser', data.user)
         // 轉址至restaurants頁面
         this.$router.push('/restaurants')

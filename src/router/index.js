@@ -7,6 +7,14 @@ import store from '../store'
 
 Vue.use(VueRouter)
 
+const authorizeIsAdmin = (to, from, next) => {
+  const currentUser = store.state.currentUser
+  if(currentUser && !currentUser.isAdmin) {
+    next('not-found')
+    return
+  }
+}
+
 const routes = [
   {
     path: '/',
@@ -68,37 +76,44 @@ const routes = [
   {
     path: '/admin/restaurants',
     name: 'admin-restaurants',
-    component: () => import('../views/AdminRestaurants.vue')
+    component: () => import('../views/AdminRestaurants.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '/admin/restaurants/new',
     name: 'admin-restaurant-new',
-    component: () => import('../views/AdminRestaurantNew.vue')
+    component: () => import('../views/AdminRestaurantNew.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '/admin/restaurants/:id/edit',
     name: 'admin-restaurant-edit',
-    component: () => import('../views/AdminRestaurantEdit.vue')
+    component: () => import('../views/AdminRestaurantEdit.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '/admin/restaurants/:id',
     name: 'admin-restaurant',
-    component: () => import('../views/AdminRestaurant.vue')
+    component: () => import('../views/AdminRestaurant.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '/admin/users',
     name: 'admin-users',
-    component: () => import('../views/AdminUsers.vue')
+    component: () => import('../views/AdminUsers.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '/admin/user/:id',
     name: 'admin-user',
-    component: () => import('../views/AdminUser.vue')
+    component: () => import('../views/AdminUser.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '/admin/categories',
     name: 'admin-categories',
-    component: () => import('../views/AdminCategories.vue')
+    component: () => import('../views/AdminCategories.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '*',
@@ -115,8 +130,36 @@ const router = new VueRouter({
   routes
 })
 // 作用於整個專案
-router.beforeEach((to, from, next) => {
-  store.dispatch('fetchCurrentUser')
+// 每次路由變換時，dispatch vuex 的 action
+router.beforeEach(async (to, from, next) => {
+  // 從localStorage 取出 token
+  const tokenInLocalStorage = localStorage.getItem('token')
+  // state 內的 token
+  const tokenInStore = store.state.token
+  // state 內的 isAuthenticated
+  let isAuthenticated = store.state.token
+  // // 如果有 token 的話才驗證
+  // if(token) {
+  //   // 取得驗證成功與否
+  //   isAuthenticated = await store.dispatch('fetchCurrentUser')
+  // }
+  if(tokenInLocalStorage && tokenInLocalStorage !== tokenInStore) {
+    isAuthenticated = await store.dispatch('fetchCurrentUser')
+  }
+
+  const pathWithoutAuthentication = ['sign-up', 'sign-in']
+
+  // 若 token 無效則轉址到登入頁 
+  if(!isAuthenticated && !pathWithoutAuthentication.includes(to.name)) {
+    next('/signin')
+    return
+  }
+  // 若 token 有效則轉址到餐廳首頁
+  if(isAuthenticated && pathWithoutAuthentication.includes(to.name)) {
+    next('/restaurants')
+    return
+  }
+
   next()
 })
 
