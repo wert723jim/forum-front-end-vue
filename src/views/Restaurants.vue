@@ -24,6 +24,11 @@
       :previous-page="previousPage"
       :next-page="nextPage"
     />
+    <div
+    v-if="restaurants.length < 1"
+    >
+      此類別無資料
+    </div> 
   </div>
 </template>
 
