@@ -88,7 +88,7 @@ export default {
           })
           return
         }
-
+        // 處理旗標，使送出按鍵在資料處理的過程中無法重複使用
         this.isProcessing = true
 
         const response = await authorizationAPI.signIn({
@@ -99,13 +99,14 @@ export default {
         
 
         const {data} = response
-        // 檢查 response starus
+        // 檢查 response status
         if(data.status !== 'success') {
           throw new Error(data.message)
         }
-
+        // 將後端回傳的 token 放入 localStorage
         localStorage.setItem('token', data.token)
         // commit vuex mutation
+        // 將使用者資料傳入vuex
         this.$store.commit('setCurrentUser', data.user)
         // 轉址至restaurants頁面
         this.$router.push('/restaurants')

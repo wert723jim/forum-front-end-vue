@@ -7,12 +7,14 @@ import store from '../store'
 
 Vue.use(VueRouter)
 
+// 檢查是否為 Admin
 const authorizeIsAdmin = (to, from, next) => {
   const currentUser = store.state.currentUser
   if(currentUser && !currentUser.isAdmin) {
     next('not-found')
     return
   }
+  next()
 }
 
 const routes = [
