@@ -103,38 +103,38 @@ export default {
     async handleSubmit() {
       try {
         // 檢查有無未填欄位
-      if(!(this.name&&this.email&&this.password&&this.passwordCheck)) {
-        Toast.fire({
-          icon: 'warning',
-          title: '請勿有空白欄位'
+        if(!(this.name&&this.email&&this.password&&this.passwordCheck)) {
+          Toast.fire({
+            icon: 'warning',
+            title: '請勿有空白欄位'
+          })
+          return
+        }
+        // 檢查密碼是否正確
+        if(this.password !== this.passwordCheck) {
+          Toast.fire({
+            icon: 'warning',
+            title: '密碼確認錯誤'
+          })
+          return
+        }
+        
+        const {data} = await userAPI.create({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck
         })
-        return
-      }
-      // 檢查密碼是否正確
-      if(this.password !== this.passwordCheck) {
-        Toast.fire({
-          icon: 'warning',
-          title: '密碼確認錯誤'
-        })
-        return
-      }
-      
-      const {data} = await userAPI.create({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordCheck: this.passwordCheck
-      })
-      
-      console.log(data)
+        
+        console.log(data)
 
-      if(data.status !== 'success') {
-        throw new Error(data.message)
-      }
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
 
-      
+        
 
-      this.$router.push({name: 'restaurants'})
+        this.$router.push({name: 'restaurants'})
       } catch(error) {
         Toast.fire({
           icon: 'warning',
